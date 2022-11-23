@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PaginationBlogsType } from './type/blogsType';
 import { SortDirection } from '../enums';
 import { BlogsModel } from './blogs.schema';
-import { GetBlogsQueryParams } from './dto/GetBlogsQueryParams';
+import { GetBlogsQueryParams } from './dto/getBlogsQueryParams';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -36,7 +36,8 @@ export class BlogsQueryRepository {
       items: findBlogs.map((findBlogs) => ({
         id: findBlogs._id.toString(),
         name: findBlogs.name,
-        youtubeUrl: findBlogs.youtubeUrl,
+        description: findBlogs.description,
+        websiteUrl: findBlogs.websiteUrl,
         createdAt: new Date(),
       })),
     };

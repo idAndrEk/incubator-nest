@@ -3,20 +3,23 @@ import { Types } from 'mongoose';
 export type BlogsType = {
   _id: Types.ObjectId;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 
 export type BlogsViewType = {
   id: string;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 
-export type CreateBlogsDto = {
+export type CreateBlogs = {
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 
