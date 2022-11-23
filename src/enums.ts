@@ -1,6 +1,6 @@
 export enum SortDirection {
-  Asc = 'asc',
-  Desc = 'desc',
+  asc = 'asc',
+  desc = 'desc',
 }
 
 export enum SortBy {

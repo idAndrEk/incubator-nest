@@ -1,26 +1,19 @@
-import { Controller, Get, HttpCode, Query } from '@nestjs/common';
-import { SortDirection } from '../enums';
+import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { BlogsQueryRepository } from './blogs.query-repository';
+import { GetBlogsQueryParams } from './dto/GetBlogsQueryParams';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(protected blogsQueryRepository: BlogsQueryRepository) {}
 
   @Get()
-  getAllBlogs(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-    @Query('searchNameTerm') searchNameTerm: string | null,
-    @Query('sortBy') sortBy: string,
-    @Query('sortDirection') sortDirection: SortDirection,
-  ) {
-    const getBlogs = this.blogsQueryRepository.getAll(
-      +page || 1,
-      +pageSize || 10,
-      searchNameTerm ? searchNameTerm.toString() : null,
-      sortBy ?? 'createdAt',
-      sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc,
-    );
-    return getBlogs;
+  @HttpCode(HttpStatus.OK)
+  async getAllBlogs(@Query() queryParams: GetBlogsQueryParams) {
+    return this.blogsQueryRepository.getAll(queryParams);
   }
 }
+
+//
+// async getAllBlogs(@Query() searchParams: GetAllBlogsSearchParamsDto) {
+//   return this.blogsQueryRepository.getAll(searchParams);
+// }

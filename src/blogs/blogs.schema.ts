@@ -1,4 +1,4 @@
-import { BlogsType } from '../type/blogsType';
+import { BlogsType } from './type/blogsType';
 import mongoose from 'mongoose';
 
 const BlogsSchema = new mongoose.Schema<BlogsType>({
