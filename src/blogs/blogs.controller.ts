@@ -15,8 +15,8 @@ import { BlogsService } from './blogs.service';
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected blogsService: BlogsService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsService: BlogsService,
   ) {}
 
   @Get()
