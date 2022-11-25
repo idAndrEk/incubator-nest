@@ -1,13 +1,39 @@
-import { IntersectionType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '../../ utilities/query/PaginationDto';
-import { SortDto } from '../../ utilities/query/SortDto';
+import {
+  IsNumber,
+  IsOptional,
+  IsInt,
+  Min,
+  IsString,
+  IsEnum,
+} from 'class-validator';
+import { SortDirection } from '../../enums';
 
-export class GetBlogsQueryParams extends IntersectionType(
-  PaginationDto,
-  SortDto,
-) {
+export class GetBlogsQueryParams {
+  @IsOptional()
+  @IsNumber()
+  @IsInt()
+  @Min(1)
+  pageSize;
+  // pageSize = 10;
+
+  @IsOptional()
+  @IsNumber()
+  @IsInt()
+  @Min(1)
+  pageNumber;
+  // pageNumber = 1;
+
   @IsOptional()
   @IsString()
-  searchNameTerm: string | null = null;
+  searchNameTerm;
+  // searchNameTerm: string | null = null;
+
+  @IsOptional()
+  sortBy;
+  // sortBy = 'createdAt';
+
+  @IsOptional()
+  @IsEnum(SortDirection)
+  sortDirection;
+  // sortDirection: SortDirection = SortDirection.desc;
 }
