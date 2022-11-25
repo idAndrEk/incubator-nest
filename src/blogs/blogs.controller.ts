@@ -4,13 +4,16 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from './blogs.query-repository';
 import { GetBlogsQueryParams } from './dto/getBlogsQueryParams';
-import { CreateBlogDto } from './dto/createBlogDto';
+import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
 import { BlogsService } from './blogs.service';
+import { ObjectId } from 'mongodb';
 
 @Controller('blogs')
 export class BlogsController {
@@ -27,7 +30,16 @@ export class BlogsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createBlog(@Body() createBlogDto: CreateBlogDto) {
+  async createBlog(@Body() createBlogDto: CreateUpdateBlogDto) {
     return this.blogsService.createNewBlog(createBlogDto);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateBlog(
+    @Param('id') blogsId: ObjectId,
+    @Body() updateBlogDto: CreateUpdateBlogDto,
+  ) {
+    return this.blogsService.updateBlog(blogsId, updateBlogDto);
   }
 }

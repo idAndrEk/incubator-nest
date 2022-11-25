@@ -14,10 +14,6 @@ export class BlogsQueryRepository {
     sortDirection = SortDirection.desc,
     sortBy = 'createdAt',
   }: GetBlogsQueryParams): Promise<PaginationBlogsType> {
-    // let filter = {};
-    // if (searchNameTerm) {
-    //   filter = { name: { $regex: { searchNameTerm } } };
-    // }
     const findBlogs = await BlogsModel.find({
       $or: [{ name: { $regex: searchNameTerm ?? '', $options: 'i' } }],
     })
