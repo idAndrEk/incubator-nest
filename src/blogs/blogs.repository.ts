@@ -17,18 +17,25 @@ export class BlogsRepository {
   }
 
   async updateBlog(
-    blogsId: ObjectId,
-    { name, description, websiteUrl }: CreateUpdateBlogDto,
+    id: ObjectId,
+    name: string,
+    description: string,
+    websiteUrl: string,
   ): Promise<boolean> {
-    const updateResult = await BlogsModel.updateOne(
-      { id: blogsId },
-      {
-        name,
-        description,
-        websiteUrl,
-      },
-    );
+    const updateResult = await BlogsModel.findByIdAndUpdate(id, {
+      name,
+      description,
+      websiteUrl,
+    });
     if (updateResult) return true;
     return false;
+    // return updateResult.modifiedCount === 1;
+  }
+
+  async deleteBlog(id: ObjectId): Promise<boolean> {
+    const deleteResult = await BlogsModel.findByIdAndDelete(id);
+    if (deleteResult) return true;
+    return false;
+    // return deleteResult.deletedCount === 1;
   }
 }

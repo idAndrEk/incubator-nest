@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -28,6 +30,12 @@ export class BlogsController {
     return this.blogsQueryRepository.getAll(queryParams);
   }
 
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getBlog(@Param('id') id: ObjectId) {
+    return this.blogsQueryRepository.getBlog(id);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createBlog(@Body() createBlogDto: CreateUpdateBlogDto) {
@@ -35,11 +43,21 @@ export class BlogsController {
   }
 
   @Put(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async updateBlog(
-    @Param('id') blogsId: ObjectId,
+  @HttpCode(HttpStatus.OK)
+  async updateBlogById(
     @Body() updateBlogDto: CreateUpdateBlogDto,
+    @Param('id') id: ObjectId,
   ) {
-    return this.blogsService.updateBlog(blogsId, updateBlogDto);
+    const updateResult = this.blogsService.updateBlog(id, updateBlogDto);
+    if (!updateBlogDto) throw new NotFoundException('Blog does not exist!');
+    return updateResult;
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteBlogById(@Param('id') id: ObjectId) {
+    const deleteResult = await this.blogsService.deleteBlog(id);
+    if (!deleteResult) throw new NotFoundException('Blog does not exist');
+    return;
   }
 }

@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationBlogsType } from './type/blogsType';
+import { BlogsViewType, PaginationBlogsType } from './type/blogsType';
 import { SortDirection } from '../enums';
 import { BlogsModel } from './blogs.schema';
 import { GetBlogsQueryParams } from './dto/getBlogsQueryParams';
 import { getCountPage, getSkipPage } from '../ utilities/getPage';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -36,6 +37,18 @@ export class BlogsQueryRepository {
         websiteUrl: findBlogs.websiteUrl,
         createdAt: new Date(),
       })),
+    };
+  }
+
+  async getBlog(id: ObjectId): Promise<BlogsViewType | null> {
+    const blog = await BlogsModel.findById(id);
+    if (!blog) return null;
+    return {
+      id: blog._id.toString(),
+      name: blog.name,
+      description: blog.description,
+      websiteUrl: blog.websiteUrl,
+      createdAt: blog.createdAt,
     };
   }
 }

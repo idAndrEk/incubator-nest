@@ -32,18 +32,13 @@ export class BlogsService {
   }
 
   async updateBlog(
-    blogsId: ObjectId,
+    id: ObjectId,
     { name, description, websiteUrl }: CreateUpdateBlogDto,
   ): Promise<boolean> {
-    return await this.blogsRepository.updateBlog(
-      blogsId,
-      name,
-      description,
-      websiteUrl,
-    );
+    return this.blogsRepository.updateBlog(id, name, description, websiteUrl);
   }
 
-  // async deleteBlog(id: string): Promise<boolean> {
-  //   return await this.blogsRepository.deleteBlogger(id);
-  // }
+  async deleteBlog(id: ObjectId): Promise<boolean> {
+    return this.blogsRepository.deleteBlog(id);
+  }
 }
