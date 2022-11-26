@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BlogsViewType, CreateBlogs } from './type/blogsType';
+import { BlogsViewType, CreateBlogs } from './types/blogsType';
 import { BlogsRepository } from './blogs.repository';
 import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
 import { ObjectId } from 'mongodb';

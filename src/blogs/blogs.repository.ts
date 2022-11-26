@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
-import { BlogsModel } from './blogs.schema';
-import { BlogsType } from './type/blogsType';
+import { BlogModel } from './blogs.schema';
+import { BlogsType } from './types/blogsType';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class BlogsRepository {
   async create(newBlogger: CreateUpdateBlogDto): Promise<BlogsType | null> {
     try {
-      const bloggerInstance = new BlogsModel(newBlogger);
+      const bloggerInstance = new BlogModel(newBlogger);
       await bloggerInstance.save();
       return bloggerInstance;
     } catch (e) {
@@ -22,7 +22,7 @@ export class BlogsRepository {
     description: string,
     websiteUrl: string,
   ): Promise<boolean> {
-    const updateResult = await BlogsModel.findByIdAndUpdate(id, {
+    const updateResult = await BlogModel.findByIdAndUpdate(id, {
       name,
       description,
       websiteUrl,
@@ -33,7 +33,7 @@ export class BlogsRepository {
   }
 
   async deleteBlog(id: ObjectId): Promise<boolean> {
-    const deleteResult = await BlogsModel.findByIdAndDelete(id);
+    const deleteResult = await BlogModel.findByIdAndDelete(id);
     if (deleteResult) return true;
     return false;
     // return deleteResult.deletedCount === 1;

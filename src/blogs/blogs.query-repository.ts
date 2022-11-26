@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { BlogsViewType, PaginationBlogsType } from './type/blogsType';
+import { BlogsViewType, PaginationBlogsType } from './types/blogsType';
 import { SortDirection } from '../enums';
-import { BlogsModel } from './blogs.schema';
+import { BlogModel } from './blogs.schema';
 import { GetBlogsQueryParams } from './dto/getBlogsQueryParams';
 import { getCountPage, getSkipPage } from '../ utilities/getPage';
 import { ObjectId } from 'mongodb';
@@ -15,14 +15,14 @@ export class BlogsQueryRepository {
     sortDirection = SortDirection.desc,
     sortBy = 'createdAt',
   }: GetBlogsQueryParams): Promise<PaginationBlogsType> {
-    const findBlogs = await BlogsModel.find({
+    const findBlogs = await BlogModel.find({
       $or: [{ name: { $regex: searchNameTerm ?? '', $options: 'i' } }],
     })
       .skip(getSkipPage(pageNumber, pageSize))
       .sort({ [sortBy]: sortDirection === SortDirection.asc ? 1 : -1 })
       .limit(pageSize)
       .lean();
-    const totalCount = await BlogsModel.countDocuments({
+    const totalCount = await BlogModel.countDocuments({
       $or: [{ name: { $regex: searchNameTerm ?? '', $options: 'i' } }],
     });
     return {
@@ -41,7 +41,7 @@ export class BlogsQueryRepository {
   }
 
   async getBlog(id: ObjectId): Promise<BlogsViewType | null> {
-    const blog = await BlogsModel.findById(id);
+    const blog = await BlogModel.findById(id);
     if (!blog) return null;
     return {
       id: blog._id.toString(),

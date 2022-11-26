@@ -1,4 +1,4 @@
-import { BlogsType } from './type/blogsType';
+import { BlogsType } from './types/blogsType';
 import mongoose from 'mongoose';
 
 export const BlogsSchema = new mongoose.Schema<BlogsType>({
@@ -8,4 +8,4 @@ export const BlogsSchema = new mongoose.Schema<BlogsType>({
   createdAt: { type: Date, required: true },
 });
 
-export const BlogsModel = mongoose.model('Blogs', BlogsSchema);
+export const BlogModel = mongoose.model('Blogs', BlogsSchema);
