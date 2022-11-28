@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
+import { blogDto } from './dto/blogDto';
 import { BlogModel } from './blogs.schema';
 import { BlogsType } from './types/blogsType';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class BlogsRepository {
-  async create(newBlogger: CreateUpdateBlogDto): Promise<BlogsType | null> {
+  async create(newBlogger: blogDto): Promise<BlogsType | null> {
     try {
       const bloggerInstance = new BlogModel(newBlogger);
       await bloggerInstance.save();

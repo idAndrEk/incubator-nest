@@ -12,43 +12,43 @@ import {
   Query,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from './blogs.query-repository';
-import { GetBlogsQueryParams } from './dto/getBlogsQueryParams';
-import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
+import { getBlogsQueryParams } from './dto/getBlogsQueryParams';
+import { blogDto } from './dto/blogDto';
 import { BlogsService } from './blogs.service';
 import { ObjectId } from 'mongodb';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsService: BlogsService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllBlogs(@Query() queryParams: GetBlogsQueryParams) {
-    return this.blogsQueryRepository.getAll(queryParams);
+  async getAllBlogs(@Query() queryParams: getBlogsQueryParams) {
+    return await this.blogsQueryRepository.getAll(queryParams);
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getBlog(@Param('id') id: ObjectId) {
-    return this.blogsQueryRepository.getBlog(id);
+    return await this.blogsQueryRepository.getBlog(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createBlog(@Body() createBlogDto: CreateUpdateBlogDto) {
-    return this.blogsService.createNewBlog(createBlogDto);
+  async createBlog(@Body() createBlogDto: blogDto) {
+    return await this.blogsService.createNewBlog(createBlogDto);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   async updateBlogById(
-    @Body() updateBlogDto: CreateUpdateBlogDto,
     @Param('id') id: ObjectId,
+    @Body() updateBlogDto: blogDto,
   ) {
-    const updateResult = this.blogsService.updateBlog(id, updateBlogDto);
+    const updateResult = await this.blogsService.updateBlog(id, updateBlogDto);
     if (!updateBlogDto) throw new NotFoundException('Blog does not exist!');
     return updateResult;
   }

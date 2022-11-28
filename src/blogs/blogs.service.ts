@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BlogsViewType, CreateBlogs } from './types/blogsType';
 import { BlogsRepository } from './blogs.repository';
-import { CreateUpdateBlogDto } from './dto/createUpdateBlogDto';
+import { blogDto } from './dto/blogDto';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class BlogsService {
     name,
     description,
     websiteUrl,
-  }: CreateUpdateBlogDto): Promise<BlogsViewType | null> {
+  }: blogDto): Promise<BlogsViewType | null> {
     const newBlogger: CreateBlogs = {
       name: name,
       description: description,
@@ -33,7 +33,7 @@ export class BlogsService {
 
   async updateBlog(
     id: ObjectId,
-    { name, description, websiteUrl }: CreateUpdateBlogDto,
+    { name, description, websiteUrl }: blogDto,
   ): Promise<boolean> {
     return this.blogsRepository.updateBlog(id, name, description, websiteUrl);
   }

@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { SortDirection } from '../../enums';
 
-export class GetBlogsQueryParams {
+export class getBlogsQueryParams {
   @IsOptional()
   @IsNumber()
   @IsInt()
