@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { postDto } from "../users/dto/postDro";
-import { CreatePostDto, PostViewType } from "./types/postType";
+import { postDto } from "./dto/postDro";
+import { CreatePostDto, PostViewType } from "./types/postsType";
 import { BlogsQueryRepository } from "../blogs/blogs.query-repository";
 import { PostRepository } from "./post.repository";
 import { ObjectId } from "mongodb";

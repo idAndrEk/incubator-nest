@@ -49,7 +49,5 @@ export class UsersController {
     return;
   }
 }
-type CreateUserInputModelType = {
-  name: string;
-  childrenCount: number;
-};
+
+

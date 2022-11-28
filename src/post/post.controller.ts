@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 import { getPostQueryParams } from "./dto/getPostQueryParams";
 import { ObjectId } from "mongodb";
-import { postDto } from "../users/dto/postDro";
+import { postDto } from "./dto/postDro";
 import { PostService } from "./post.service";
 import { PostsQueryRepository } from "./post.query-repository";
 import { UserViewResponse } from "../users/types/usersType";

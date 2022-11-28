@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePostDto, PostType } from "./types/postType";
+import { CreatePostDto, PostsType } from "./types/postsType";
 import { PostModel } from "./post.schema";
 import { ObjectId } from "mongodb";
 
 @Injectable()
 export class PostRepository {
 
-  async createPost(newPost: CreatePostDto): Promise<PostType | null> {
+  async createPost(newPost: CreatePostDto): Promise<PostsType | null> {
     try {
       const post = new PostModel(newPost);
       await post.save();

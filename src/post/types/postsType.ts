@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export type PostType = {
+export type PostsType = {
   _id: ObjectId;
   title: string;
   shortDescription: string;

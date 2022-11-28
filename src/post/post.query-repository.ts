@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { getCountPage, getSkipPage } from "../ utilities/getPage";
-import { PaginationPostType, PostType, PostViewType } from "./types/postType";
+import { PaginationPostType, PostsType, PostViewType } from "./types/postsType";
 import { SortDirection } from "../enums";
 import { UserViewResponse } from "../users/types/usersType";
 import { getPostQueryParams } from "./dto/getPostQueryParams";
@@ -92,7 +92,7 @@ export class PostsQueryRepository {
     };
   }
 
-  async checkPost(id: ObjectId): Promise<PostType | null> {
+  async checkPost(id: ObjectId): Promise<PostsType | null> {
     let post = await PostModel.findById(id);
     if (!post) return null;
     return post;

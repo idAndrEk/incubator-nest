@@ -1,4 +1,4 @@
-import { PostType } from './types/postType';
+import { PostsType } from './types/postsType';
 import mongoose from 'mongoose';
 
 const extendedLikesInfoSchema = new mongoose.Schema(
@@ -10,7 +10,7 @@ const extendedLikesInfoSchema = new mongoose.Schema(
   { _id: false },
 );
 
-export const PostSchema = new mongoose.Schema<PostType>({
+export const PostSchema = new mongoose.Schema<PostsType>({
   title: { type: String, required: true },
   shortDescription: { type: String, required: true },
   content: { type: String, required: true },
