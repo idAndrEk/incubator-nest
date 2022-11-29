@@ -2,18 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
-export class ExampleService {
+export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
   async sendEmailConfirmationMessage(code: string, email: string) {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-    const result = await transporter.sendMail({
+   const result = await this.mailerService.sendMail({
       from: "Andrey",
       to: email,
       subject: "Account verified",

@@ -4,6 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { MailService } from "./services/mailer/mailer.service";
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     }),
   ],
   controllers: [AppController],
-  providers: []
+  providers: [MailService],
+  exports:[MailService],
 })
 export class AppModule {
 }
