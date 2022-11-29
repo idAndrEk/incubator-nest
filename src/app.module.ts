@@ -20,9 +20,11 @@ import { MailService } from "./services/mailer/mailer.service";
             pass: process.env.EMAIL_PASSWORD
           },
         },
+
         defaults: {
           from:'"nest-modules" <modules@nestjs.com>',
         },
+
         template: {
           dir: process.cwd() + '/templates/',
           // adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
