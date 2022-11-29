@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
+import {MailerService} from "@nest-modules/mailer";
 
 @Injectable()
 export class MailService {
@@ -16,14 +16,7 @@ export class MailService {
   },
 
   async sendEmailRecoveryMessage(code: string, email: string) {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-    const result = await transporter.sendMail({
+      const result = await this.mailerService.sendMail({
       from: "Andrey",
       to: email,
       subject: "Recovery code",
