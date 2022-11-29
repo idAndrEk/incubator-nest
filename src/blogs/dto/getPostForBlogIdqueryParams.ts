@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { SortDirection } from '../../enums';
 
-export class getBlogsQueryParams {
+export class getPostForBlogerIdQueryParams {
   @IsOptional()
   @IsNumber()
   @IsInt()
@@ -20,10 +20,6 @@ export class getBlogsQueryParams {
   @IsInt()
   @Min(1)
   pageNumber;
-
-  @IsOptional()
-  @IsString()
-  searchNameTerm;
 
   @IsOptional()
   sortBy;

@@ -41,23 +41,23 @@ export class PostController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createPost(@Body() createPostDto: postDto) {
-    return this.postService.createNewPost(createPostDto);
+    return this.postService.createNewPost(createPostDto.title, createPostDto.shortDescription, createPostDto.content, createPostDto.blogId);
   }
 
-  @Put(':id')
+  @Put(":id")
   @HttpCode(HttpStatus.OK)
   async updatePostById(
     @Param("id") id: ObjectId, @Body() updatePostDto: postDto) {
-    const updateResult = await this.postService.updatePost(id, updatePostDto)
-    if (!updateResult) throw new NotFoundException('post does not exist!');
+    const updateResult = await this.postService.updatePost(id, updatePostDto);
+    if (!updateResult) throw new NotFoundException("post does not exist!");
     return updateResult;
   }
 
-  @Delete('id')
+  @Delete("id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deletePostById(@Param('id') id: ObjectId) {
-    const deleteResult = await this.postService.deletePost(id)
-    if (!deleteResult) throw new NotFoundException('Post does not exist');
+  async deletePostById(@Param("id") id: ObjectId) {
+    const deleteResult = await this.postService.deletePost(id);
+    if (!deleteResult) throw new NotFoundException("Post does not exist");
     return;
   }
 }
