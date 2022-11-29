@@ -8,9 +8,9 @@ import { ObjectId } from 'mongodb';
 export class BlogsRepository {
   async create(newBlogger: blogDto): Promise<BlogsType | null> {
     try {
-      const bloggerInstance = new BlogModel(newBlogger);
-      await bloggerInstance.save();
-      return bloggerInstance;
+      const blog = new BlogModel(newBlogger);
+      await blog.save();
+      return blog;
     } catch (e) {
       return null;
     }

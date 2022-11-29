@@ -2,50 +2,47 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode, HttpStatus, NotFoundException,
   Param,
   Post,
   Put,
-  Query,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
+  Query
+} from "@nestjs/common";
+import { UsersService } from "./users.service";
+import { getUsersQueryParams } from "./dto/getUsersQueryParams";
+import { UsersQueryRepository } from "./users.query-repository";
+import { ObjectId } from "mongodb";
+import { userDto } from "./dto/userDto";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
-  constructor(protected userService: UsersService) {}
+  constructor(private readonly userService: UsersService,
+              private readonly usersQueryRepository: UsersQueryRepository) {
+  }
 
   @Get()
-  getUsers(@Query('term') term: string) {
-    return this.userService.findUsers(term);
+  @HttpCode(HttpStatus.OK)
+  async getAllUsers(@Query() queryParams: getUsersQueryParams) {
+    return this.usersQueryRepository.getAll(queryParams);
   }
 
-  @Get(':id')
-  getUser(@Param('id') userId) {
-    return [{ id: 1 }, { id: 2 }].find((u) => u.id === +userId);
+  @Get(":id")
+  @HttpCode(HttpStatus.OK)
+  async getUser(@Param("id") id: ObjectId) {
+    return await this.usersQueryRepository.getUser(id);
   }
 
-  @Post(':id')
-  deleteUsers(@Body() inputModel: CreateUserInputModelType) {
-    return {
-      id: 12,
-      name: inputModel.name,
-      childrenCount: inputModel.childrenCount,
-    };
+  @Post(":id")
+  @HttpCode(HttpStatus.CREATED)
+  async createUser(@Body() createUserDto: userDto) {
+    return await this.userService.createNewUser(createUserDto);
   }
 
-  @Put(':id')
-  updateUser(
-    @Param('id') userId: string,
-    @Body() model: CreateUserInputModelType,
-  ) {
-    return {
-      id: userId,
-      model: model,
-    };
-  }
-
-  @Delete(':id')
-  createUser(@Param('id') userId: string) {
+  @Delete(":id")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUserById(@Param("id") id: ObjectId) {
+    const deleteResult = await this.userService.deleteUser(id);
+    if (!deleteResult) throw new NotFoundException("User does not exist");
     return;
   }
 }
