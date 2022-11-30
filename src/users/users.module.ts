@@ -5,7 +5,6 @@ import { UsersRepository } from "./users.repository";
 import { UsersQueryRepository } from "./users.query-repository";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
-import { MailerService } from "../services/mailer/mailer.service";
 
 @Module({
   imports: [
