@@ -4,14 +4,17 @@ import { SortDirection } from "../enums";
 import { BlogModel } from "./blogs.schema";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
 import { getCountPage, getSkipPage } from "../ utilities/getPage";
-import { ObjectId } from "mongodb";
 import { PostModel } from "../post/post.schema";
 import { PaginationPostType, PostViewType } from "../post/types/postsType";
 import { UserViewResponse } from "../users/types/usersType";
 import { getPostForBlogerIdQueryParams } from "./dto/getPostForBlogIdqueryParams";
+import { LikesRepository } from "../like/likesRepository";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class BlogsQueryRepository {
+  constructor(private readonly likesRepository: LikesRepository) {
+  }
 
   async getAll({
                  pageNumber = 1,
@@ -76,12 +79,12 @@ export class BlogsQueryRepository {
     });
     let items: PostViewType[] = [];
     for (const post of postData) {
-      const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString());
+      const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
       post.extendedLikesInfo.likesCount = likes;
       post.extendedLikesInfo.dislikesCount = dislikes;
-      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString());
+      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
       post.extendedLikesInfo.myStatus = myStatus;
-      const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3);
+      const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
       items.push({
         id: post._id.toString(),
         title: post.title,

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { ExtendedLikesInfo } from "../../like/types/likesType";
 
 export type PostsType = {
   _id: ObjectId;
@@ -38,19 +39,6 @@ export type CreatePostDto = {
   bloggerName: string;
   createdAt: Date;
   extendedLikesInfo: ExtendedLikesInfo;
-};
-
-export type ExtendedLikesInfo = {
-  likesCount: number;
-  dislikesCount: number;
-  myStatus: string;
-  newestLikes: NewestLikes[];
-};
-
-export type NewestLikes = {
-  createdAt: Date;
-  userId: ObjectId;
-  login: string;
 };
 
 export type LikesType = {

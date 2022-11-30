@@ -6,6 +6,7 @@ import { UserViewResponse } from "../users/types/usersType";
 import { getPostQueryParams } from "./dto/getPostQueryParams";
 import { PostModel } from "./post.schema";
 import { ObjectId } from "mongodb";
+import { LikesRepository } from "../like/likesRepository";
 
 @Injectable()
 export class PostsQueryRepository {
@@ -31,12 +32,12 @@ export class PostsQueryRepository {
       const {
         likes,
         dislikes
-      } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString());
+      } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
       post.extendedLikesInfo.likesCount = likes;
       post.extendedLikesInfo.dislikesCount = dislikes;
-      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString());
+      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
       post.extendedLikesInfo.myStatus = myStatus;
-      const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3);
+      const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
       items.push({
         id: post._id.toString(),
         title: post.title,
@@ -65,15 +66,15 @@ export class PostsQueryRepository {
   async findPost(id: ObjectId, user: UserViewResponse | undefined): Promise<PostViewType | null> {
     const post = await PostModel.findById(id);
     if (!post) return null;
-    const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString());
+    const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
     post.extendedLikesInfo.likesCount = likes;
     post.extendedLikesInfo.dislikesCount = dislikes;
     let defaultMyStatus = "None";
     if (user) {
-      defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString());
+      defaultMyStatus = await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
     }
     post.extendedLikesInfo.myStatus = defaultMyStatus;
-    const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3);
+    const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
     post.extendedLikesInfo.newestLikes = newestLikes;
     return {
       id: post._id.toString(),
