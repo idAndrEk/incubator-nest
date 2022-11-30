@@ -12,7 +12,7 @@ import { MailService } from "./services/mailer/mailer.service";
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
-          host: process.env.EMAIL_HOST,
+          host: process.env.EMAIL_HOST ,
           port: process.env.EMAIL_PORT,
           // secure: false, // upgrade later with STARTTLS
           auth: {
@@ -26,7 +26,7 @@ import { MailService } from "./services/mailer/mailer.service";
         },
 
         template: {
-          dir: process.cwd() + '/templates/',
+          dir: __dirname + '/templates',
           // adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
           options: {
             strict: true,

@@ -13,7 +13,7 @@ export class MailService {
       text: `https://somesite.com/confirm-email?code=${code}`
     });
     return result;
-  },
+  }
 
   async sendEmailRecoveryMessage(code: string, email: string) {
       const result = await this.mailerService.sendMail({
