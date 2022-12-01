@@ -33,7 +33,7 @@ export class BlogsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllBlogs(@Query() queryParams: getBlogsQueryParams) {
-    return await this.blogsQueryRepository.getAll(queryParams);
+    return await this.blogsQueryRepository.getBlogs(queryParams);
   }
 
   @Get(":id")

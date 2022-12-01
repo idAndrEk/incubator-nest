@@ -29,13 +29,13 @@ export class PostController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllPosts(@Query() queryParams: getPostQueryParams, @Req() user: UserViewResponse) {
-    return this.postQueryRepository.findPosts(user, queryParams);
+    return this.postQueryRepository.getPosts(user, queryParams);
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async getPost(@Param("id") id: ObjectId, @Req() user: UserViewResponse) {
-    return this.postQueryRepository.findPost(id, user);
+    return this.postQueryRepository.getPost(id, user);
   }
 
   @Post()

@@ -16,7 +16,7 @@ export class BlogsQueryRepository {
   constructor(private readonly likesRepository: LikesRepository) {
   }
 
-  async getAll({
+  async getBlogs({
                  pageNumber = 1,
                  pageSize = 10,
                  searchNameTerm = null,
@@ -82,7 +82,7 @@ export class BlogsQueryRepository {
       const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
       post.extendedLikesInfo.likesCount = likes;
       post.extendedLikesInfo.dislikesCount = dislikes;
-      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
+      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, user._id);
       post.extendedLikesInfo.myStatus = myStatus;
       const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
       items.push({

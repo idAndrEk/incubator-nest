@@ -2,21 +2,21 @@ import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
 import { userDto } from "./dto/userDto";
 import { UserAccType, UserResponse } from "./types/usersType";
-import { ObjectId } from 'mongodb';
-import {v4 as uuidv4} from "uuid";
+import { ObjectId } from "mongodb";
+import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
-import bcrypt from "bcrypt";
-import { MailService } from "../services/mailer/mailer.service";
+import { PasswordService } from "../services/passwordService/password.service";
 
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository,
-              private readonly mailerService:MailService) {
+              private readonly passwordService: PasswordService
+              /* private readonly mailerService:MailService*/) {
   }
 
   async createNewUser({ login, email, password }: userDto): Promise<UserResponse | null> {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await this.passwordService.hashPassword(password);
     const user: UserAccType = {
       _id: new ObjectId(),
       accountData: {
@@ -33,7 +33,7 @@ export class UsersService {
     };
     const newUserDB = await this.usersRepository.createUser(user);
     if (!newUserDB) return null;
-    await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
+    // await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
     const userResponse = {
       id: user._id,
       login: user.accountData.login,

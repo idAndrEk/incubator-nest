@@ -32,7 +32,7 @@ export class UsersController {
     return await this.usersQueryRepository.getUser(id);
   }
 
-  @Post(":id")
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() createUserDto: userDto) {
     return await this.userService.createNewUser(createUserDto);

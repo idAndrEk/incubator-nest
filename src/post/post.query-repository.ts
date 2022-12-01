@@ -13,7 +13,7 @@ export class PostsQueryRepository {
   constructor(protected likesRepository: LikesRepository) {
   }
 
-  async findPosts(user: UserViewResponse, {
+  async getPosts(user: UserViewResponse, {
                     pageNumber = 1,
                     pageSize = 10,
                     sortDirection = SortDirection.desc,
@@ -35,7 +35,7 @@ export class PostsQueryRepository {
       } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
       post.extendedLikesInfo.likesCount = likes;
       post.extendedLikesInfo.dislikesCount = dislikes;
-      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
+      let myStatus = !user ? "None" : await this.likesRepository.getLikeStatusByUserId(post._id, user._id);
       post.extendedLikesInfo.myStatus = myStatus;
       const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
       items.push({
@@ -63,7 +63,7 @@ export class PostsQueryRepository {
     };
   }
 
-  async findPost(id: ObjectId, user: UserViewResponse | undefined): Promise<PostViewType | null> {
+  async getPost(id: ObjectId, user: UserViewResponse | undefined): Promise<PostViewType | null> {
     const post = await PostModel.findById(id);
     if (!post) return null;
     const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
@@ -71,7 +71,7 @@ export class PostsQueryRepository {
     post.extendedLikesInfo.dislikesCount = dislikes;
     let defaultMyStatus = "None";
     if (user) {
-      defaultMyStatus = await this.likesRepository.getLikeStatusByUserId(post._id, (user._id).toString());
+      defaultMyStatus = await this.likesRepository.getLikeStatusByUserId(post._id, user._id);
     }
     post.extendedLikesInfo.myStatus = defaultMyStatus;
     const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
