@@ -6,13 +6,14 @@ import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
 import { PasswordService } from "../services/passwordService/password.service";
+import { MailService } from "../services/mailer/mailer.service";
 
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository,
-              private readonly passwordService: PasswordService
-              /* private readonly mailerService:MailService*/) {
+              private readonly passwordService: PasswordService,
+              private readonly mailerService:MailService) {
   }
 
   async createNewUser({ login, email, password }: userDto): Promise<UserResponse | null> {
@@ -33,7 +34,7 @@ export class UsersService {
     };
     const newUserDB = await this.usersRepository.createUser(user);
     if (!newUserDB) return null;
-    // await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
+    await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
     const userResponse = {
       id: user._id,
       login: user.accountData.login,
