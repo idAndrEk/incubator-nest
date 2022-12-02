@@ -5,22 +5,38 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { BlogsModule } from "./blogs/blogs.module";
 import { PostModule } from "./post/post.module";
 import { UsersModule } from "./users/users.module";
-import { MailModule } from "./services/mailer/mail.module";
-import { MailConfigService } from "./services/mailer/mail-config.service";
 import { MailerModule } from "@nestjs-modules/mailer";
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MongoURI),
-    MailerModule.forRootAsync({
-      useClass: MailConfigService,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        // secure: false, // upgrade later with STARTTLS
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      },
+      defaults: {
+        from: "\"nest-modules\" <modules@nestjs.com>"
+      },
+      template: {
+        dir: __dirname + "/templates",
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true
+        }
+      }
     }),
-      BlogsModule,
-      PostModule,
-      UsersModule,
-    MailModule
+    BlogsModule,
+    PostModule,
+    UsersModule,
   ],
   controllers: [AppController]
 })
