@@ -9,4 +9,9 @@ export const LikesSchema = new mongoose.Schema<LikesType>({
   userId: {type: ObjectId, required: true},
   login: {type: String, required: true},
 })
-export const LikeModel = mongoose.model('Likes', LikesSchema)
+
+export const likeInfoSchema = new mongoose.Schema({
+  likesCount: {type: Number, default: 0},
+  dislikesCount: {type: Number, default: 0},
+  myStatus: {type: String}
+}, {_id: false})

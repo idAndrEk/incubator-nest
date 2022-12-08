@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
+require('dotenv').config()
 import { AppController } from "./app.controller";
-import { ConfigModule } from "@nestjs/config";
-import { MongooseModule } from "@nestjs/mongoose";
 import { BlogsModule } from "./blogs/blogs.module";
 import { PostModule } from "./post/post.module";
 import { UsersModule } from "./users/users.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
+import { LikesModule } from "./like/likes.module";
+import { CommentModule } from "./comment/comment.module";
+
 
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MongoURI),
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
@@ -37,8 +37,12 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
     BlogsModule,
     PostModule,
     UsersModule,
+    LikesModule,
+    CommentModule,
   ],
   controllers: [AppController]
 })
 export class AppModule {
 }
+
+

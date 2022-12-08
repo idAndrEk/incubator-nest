@@ -34,7 +34,7 @@ export class UsersService {
     };
     const newUserDB = await this.usersRepository.createUser(user);
     if (!newUserDB) return null;
-    await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
+    // await this.mailerService.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email);
     const userResponse = {
       id: user._id,
       login: user.accountData.login,

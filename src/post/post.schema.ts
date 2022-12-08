@@ -20,4 +20,4 @@ export const PostSchema = new mongoose.Schema<PostsType>({
   extendedLikesInfo: { type: extendedLikesInfoSchema },
 });
 
-export const PostModel = mongoose.model('Posts', PostSchema);
+

@@ -39,7 +39,6 @@ export class BlogsController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async getBlog(@Param("id") id: ObjectId) {
-    console.log(id);
     return await this.blogsQueryRepository.getBlog(id);
   }
 

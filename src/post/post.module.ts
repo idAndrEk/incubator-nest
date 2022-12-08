@@ -1,19 +1,19 @@
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
-import { PostSchema } from "./post.schema";
 import { PostsQueryRepository } from "./post.query-repository";
 import { PostController } from "./post.controller";
 import { PostService } from "./post.service";
 import { PostRepository } from "./post.repository";
 import { BlogsQueryRepository } from "../blogs/blogs.query-repository";
 import { LikesRepository } from "../like/likesRepository";
+import { postsProviders } from "./post.providers";
+import { DatabaseModule } from "../database/database.module";
+import { blogsProviders } from "../blogs/blogs.providers";
+import { likesProviders } from "../like/likes.providers";
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: "posts", schema: PostSchema }])
-  ],
+  imports: [DatabaseModule],
   controllers: [PostController],
-  providers: [PostService, PostsQueryRepository, PostRepository, BlogsQueryRepository, LikesRepository],
+  providers: [...postsProviders, PostService, PostsQueryRepository, PostRepository,...blogsProviders, BlogsQueryRepository, ...likesProviders,LikesRepository],
   exports: []
 })
 export class PostModule {

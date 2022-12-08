@@ -1,19 +1,20 @@
-import { Injectable } from "@nestjs/common";
-import { BlogsViewType, PaginationBlogsType } from "./types/blogsType";
+import { Inject, Injectable } from "@nestjs/common";
+import { BlogsType, BlogsViewType, PaginationBlogsType } from "./types/blogsType";
 import { SortDirection } from "../enums";
-import { BlogModel } from "./blogs.schema";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
 import { getCountPage, getSkipPage } from "../ utilities/getPage";
-import { PostModel } from "../post/post.schema";
-import { PaginationPostType, PostViewType } from "../post/types/postsType";
+import { PaginationPostType, PostsType, PostViewType } from "../post/types/postsType";
 import { UserViewResponse } from "../users/types/usersType";
 import { getPostForBlogerIdQueryParams } from "./dto/getPostForBlogIdqueryParams";
 import { LikesRepository } from "../like/likesRepository";
 import { ObjectId } from "mongodb";
+import { Model } from "mongoose";
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(private readonly likesRepository: LikesRepository) {
+  constructor(@Inject("BLOG_MODEL") private readonly blogModel: Model<BlogsType>,
+              @Inject("POST_MODEL") private readonly postModel: Model<PostsType>,
+              private readonly likesRepository: LikesRepository) {
   }
 
   async getBlogs({
@@ -23,14 +24,14 @@ export class BlogsQueryRepository {
                  sortDirection = SortDirection.desc,
                  sortBy = "createdAt"
                }: getBlogsQueryParams): Promise<PaginationBlogsType> {
-    const findBlogs = await BlogModel.find({
+    const findBlogs = await this.blogModel.find({
       $or: [{ name: { $regex: searchNameTerm ?? "", $options: "i" } }]
     })
       .skip(getSkipPage(pageNumber, pageSize))
       .sort({ [sortBy]: sortDirection === SortDirection.asc ? 1 : -1 })
       .limit(pageSize)
       .lean();
-    const totalCount = await BlogModel.countDocuments({
+    const totalCount = await this.blogModel.countDocuments({
       $or: [{ name: { $regex: searchNameTerm ?? "", $options: "i" } }]
     });
     return {
@@ -49,7 +50,7 @@ export class BlogsQueryRepository {
   }
 
   async getBlog(id: ObjectId): Promise<BlogsViewType | null> {
-    const blog = await BlogModel.findById(id);
+    const blog = await this.blogModel.findById(id);
     if (!blog) return null;
     return {
       id: blog._id.toString(),
@@ -66,7 +67,7 @@ export class BlogsQueryRepository {
     sortDirection = SortDirection.desc,
     sortBy = "createdAt"
   }: getPostForBlogerIdQueryParams, user: UserViewResponse): Promise<PaginationPostType> {
-    const postData = await PostModel
+    const postData = await this.postModel
       .find({
         $or: [{ blogId: { $regex: id ?? "" } }]
       })
@@ -74,7 +75,7 @@ export class BlogsQueryRepository {
       .sort({ [sortBy]: sortDirection === SortDirection.asc ? 1 : -1 })
       .limit(pageSize)
       .lean();
-    const totalCount = await PostModel.countDocuments({
+    const totalCount = await this.postModel.countDocuments({
       $or: [{ blogId: { $regex: id ?? "" } }]
     });
     let items: PostViewType[] = [];

@@ -7,13 +7,13 @@ import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 import { PasswordService } from "../services/passwordService/password.service";
 import { MailService } from "../services/mailer/mailer.service";
+import { DatabaseModule } from "../database/database.module";
+import { usersProviders } from "./users.providers";
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: "users", schema: UserSchema }])
-  ],
+  imports: [DatabaseModule],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository, UsersQueryRepository,PasswordService,MailService],
+  providers: [...usersProviders,UsersService, UsersRepository, UsersQueryRepository,PasswordService,MailService],
   exports: []
 })
 

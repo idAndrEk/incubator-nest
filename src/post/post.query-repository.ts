@@ -1,32 +1,33 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getCountPage, getSkipPage } from "../ utilities/getPage";
 import { PaginationPostType, PostsType, PostViewType } from "./types/postsType";
 import { SortDirection } from "../enums";
 import { UserViewResponse } from "../users/types/usersType";
 import { getPostQueryParams } from "./dto/getPostQueryParams";
-import { PostModel } from "./post.schema";
 import { ObjectId } from "mongodb";
 import { LikesRepository } from "../like/likesRepository";
+import { Model } from "mongoose";
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(protected likesRepository: LikesRepository) {
+  constructor(@Inject("POST_MODEL") private readonly postModel: Model<PostsType>,
+              protected likesRepository: LikesRepository) {
   }
 
   async getPosts(user: UserViewResponse, {
-                    pageNumber = 1,
-                    pageSize = 10,
-                    sortDirection = SortDirection.desc,
-                    sortBy = "createdAt"
-                  }: getPostQueryParams
+                   pageNumber = 1,
+                   pageSize = 10,
+                   sortDirection = SortDirection.desc,
+                   sortBy = "createdAt"
+                 }: getPostQueryParams
   ): Promise<PaginationPostType> {
-    const findPosts = await PostModel
+    const findPosts = await this.postModel
       .find({})
       .skip(getSkipPage(pageNumber, pageSize))
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === SortDirection.asc ? 1 : -1 })
       .lean();
-    const totalCount = await PostModel.countDocuments({});
+    const totalCount = await this.postModel.countDocuments({});
     let items: PostViewType[] = [];
     for (const post of findPosts) {
       const {
@@ -64,7 +65,7 @@ export class PostsQueryRepository {
   }
 
   async getPost(id: ObjectId, user: UserViewResponse | undefined): Promise<PostViewType | null> {
-    const post = await PostModel.findById(id);
+    const post = await this.postModel.findById(id);
     if (!post) return null;
     const { likes, dislikes } = await this.likesRepository.getLikesAndDislikesCountByParentId(post._id);
     post.extendedLikesInfo.likesCount = likes;
@@ -94,7 +95,7 @@ export class PostsQueryRepository {
   }
 
   async checkPost(id: ObjectId): Promise<PostsType | null> {
-    let post = await PostModel.findById(id);
+    let post = await this.postModel.findById(id);
     if (!post) return null;
     return post;
   }

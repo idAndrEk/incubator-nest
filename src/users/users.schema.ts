@@ -15,4 +15,3 @@ export const UserSchema = new mongoose.Schema<UserAccType>({
   }
 })
 
-export const UserModel = mongoose.model('Users', UserSchema)

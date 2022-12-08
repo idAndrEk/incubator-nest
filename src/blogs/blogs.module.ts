@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
-import { BlogsSchema } from "./blogs.schema";
 import { BlogsController } from "./blogs.controller";
 import { BlogsService } from "./blogs.service";
 import { BlogsRepository } from "./blogs.repository";
@@ -8,13 +6,15 @@ import { BlogsQueryRepository } from "./blogs.query-repository";
 import { LikesRepository } from "../like/likesRepository";
 import { PostService } from "../post/post.service";
 import { PostRepository } from "../post/post.repository";
+import { DatabaseModule } from "../database/database.module";
+import { blogsProviders } from "./blogs.providers";
+import { postsProviders } from "../post/post.providers";
+import { likesProviders } from "../like/likes.providers";
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: "blogs", schema: BlogsSchema }])
-  ],
+  imports: [DatabaseModule],
   controllers: [BlogsController],
-  providers: [BlogsService, BlogsRepository, BlogsQueryRepository, PostService, PostRepository, LikesRepository],
+  providers: [...blogsProviders,BlogsService, BlogsRepository, BlogsQueryRepository, ...postsProviders,PostService, PostRepository, ...likesProviders,LikesRepository],
   exports: []
 })
 export class BlogsModule {

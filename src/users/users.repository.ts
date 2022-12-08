@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from "@nestjs/common";
 import { UserAccType } from "./types/usersType";
-import { UserModel } from "./users.schema";
 import { ObjectId } from "mongodb";
+import { Model } from "mongoose";
 
 @Injectable()
 export class UsersRepository {
+  constructor(@Inject("USER_MODEL") private readonly userModel: Model<UserAccType>) {
+  }
   async createUser(newUser: UserAccType): Promise<UserAccType | null> {
     try {
-      const user = new UserModel(newUser)
+      const user = new this.userModel(newUser)
       await user.save()
       return user
     } catch (e) {
@@ -16,7 +18,7 @@ export class UsersRepository {
   }
 
   async deleteUser(id: ObjectId): Promise<boolean> {
-    const user = await UserModel.findByIdAndDelete(id)
+    const user = await this.userModel.findByIdAndDelete(id)
     if (user) return true
     return false
   }

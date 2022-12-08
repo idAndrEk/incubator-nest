@@ -1,13 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { UserModel } from "./users.schema";
+import { Inject, Injectable } from "@nestjs/common";
 import { getCountPage, getSkipPage } from "../ utilities/getPage";
 import { SortDirection } from "../enums";
 import { getUsersQueryParams } from "./dto/getUsersQueryParams";
-import { PaginationUserType, UserResponse } from "./types/usersType";
+import { PaginationUserType, UserAccType, UserResponse } from "./types/usersType";
 import { ObjectId } from "mongodb";
+import { Model } from "mongoose";
 
 @Injectable()
 export class UsersQueryRepository {
+  constructor(@Inject("USER_MODEL") private readonly userModel: Model<UserAccType>) {
+  }
 
   async getAll({
                    pageNumber = 1,
@@ -15,7 +17,7 @@ export class UsersQueryRepository {
                    sortDirection = SortDirection.desc,
                    sortBy = "createdAt"
                  }:getUsersQueryParams): Promise<PaginationUserType> {
-    const usersData = await UserModel
+    const usersData = await this.userModel
       .aggregate()
       .project({
         id: '$_id',
@@ -27,7 +29,7 @@ export class UsersQueryRepository {
       .skip(getSkipPage(pageNumber, pageSize))
       .sort({[sortBy]: sortDirection === SortDirection.asc ? 1 : -1})
       .limit(pageSize)
-    const totalCount = await UserModel.countDocuments({})
+    const totalCount = await this.userModel.countDocuments({})
     return {
       "pagesCount": getCountPage(totalCount, pageSize),
       "page": pageNumber,
@@ -38,7 +40,7 @@ export class UsersQueryRepository {
   }
 
   async getUser(id: ObjectId): Promise<UserResponse | null> {
-    const user = await UserModel.findById(id)
+    const user = await this.userModel.findById(id)
     if (!user) return null
     return {
       id: user._id,

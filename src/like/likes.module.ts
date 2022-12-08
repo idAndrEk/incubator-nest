@@ -1,14 +1,13 @@
-// import { Module } from "@nestjs/common";
-// import { MongooseModule } from "@nestjs/mongoose";
-// import { LikeInfoSchema } from "./likes.schema";
-// import { LikesRepository } from "./likesRepository";
-//
-// @Module({
-//   import: [
-//     MongooseModule.forFeature([{ name: "likes", schema: LikeInfoSchema }]),
-//   ],
-//   controllers: [],
-//   providers: [LikesRepository],
-//   exports: []
-// })
-// export class LikesModule
+import { Module } from "@nestjs/common";
+import { LikesRepository } from "./likesRepository";
+import { DatabaseModule } from "../database/database.module";
+import { likesProviders } from "./likes.providers";
+
+@Module({
+  imports: [DatabaseModule],
+  controllers: [],
+  providers: [...likesProviders,LikesRepository],
+  exports: []
+})
+export class LikesModule {
+}
