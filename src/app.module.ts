@@ -7,7 +7,7 @@ import { UsersModule } from "./users/users.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { LikesModule } from "./like/likes.module";
-import { CommentModule } from "./comment/comment.module";
+// import { CommentModule } from "./comment/comment.module";
 
 
 
@@ -38,7 +38,7 @@ import { CommentModule } from "./comment/comment.module";
     PostModule,
     UsersModule,
     LikesModule,
-    CommentModule,
+    // CommentModule,
   ],
   controllers: [AppController]
 })
