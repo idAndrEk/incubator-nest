@@ -82,7 +82,7 @@ export class BlogsController {
   async createPostForBlog(@Param("id") id: ObjectId,
                           @Body() queryParams: postForBlogDto) {
     try {
-      return await this.postsService.createNewPost(id.toString(), queryParams.title, queryParams.shortDescription, queryParams.content);
+      return await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
     } catch (error) {
       console.log(error);
       return ("Error");

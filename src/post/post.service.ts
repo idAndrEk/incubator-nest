@@ -11,15 +11,15 @@ export class PostService {
               private readonly blogsQueryRepository: BlogsQueryRepository) {
   }
 
-  async createNewPost(title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<PostViewType | null> {
+  async createNewPost(blogId: ObjectId, title: string, shortDescription: string, content: string): Promise<PostViewType | null> {
     const blogger = await this.blogsQueryRepository.getBlog(blogId);
     if (!blogger) return null;
     const newPost: CreatePostDto = {
-      title: title,
+      title,
       bloggerName: blogger.name,
-      shortDescription: shortDescription,
-      content: content,
-      blogId: blogId.toString(),
+      shortDescription,
+      content,
+      blogId,
       createdAt: new Date(),
       extendedLikesInfo: {
         likesCount: 0,
@@ -30,7 +30,7 @@ export class PostService {
     };
     const createdPost = await this.postRepository.createPost(newPost);
     if (createdPost) return {
-      id: createdPost._id.toString(),
+      id: createdPost._id,
       title: createdPost.title,
       bloggerName: createdPost.bloggerName,
       shortDescription: createdPost.shortDescription,
@@ -52,6 +52,6 @@ export class PostService {
   }
 
   async deletePost(id: ObjectId): Promise<boolean> {
-    return await this.postRepository.deletePost(id)
+    return await this.postRepository.deletePost(id);
   }
 }

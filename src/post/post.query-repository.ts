@@ -40,7 +40,7 @@ export class PostsQueryRepository {
       post.extendedLikesInfo.myStatus = myStatus;
       const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
       items.push({
-        id: post._id.toString(),
+        id: post._id,
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
@@ -78,7 +78,7 @@ export class PostsQueryRepository {
     const newestLikes = await this.likesRepository.getNewestLikesByParentId(post._id, 3);
     post.extendedLikesInfo.newestLikes = newestLikes;
     return {
-      id: post._id.toString(),
+      id: post._id,
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
