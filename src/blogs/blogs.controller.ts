@@ -82,6 +82,4 @@ export class BlogsController {
     if (!deleteResult) throw new NotFoundException("Blog does not exist");
     return;
   }
-
-
 }

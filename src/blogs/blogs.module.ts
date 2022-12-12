@@ -10,10 +10,11 @@ import { DatabaseModule } from "../database/database.module";
 import { blogsProviders } from "./blogs.providers";
 import { postsProviders } from "../post/post.providers";
 import { likesProviders } from "../like/likes.providers";
+import { TestingController } from "../testing/testing-router";
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [BlogsController],
+  controllers: [BlogsController,TestingController],
   providers: [...blogsProviders,BlogsService, BlogsRepository, BlogsQueryRepository, ...postsProviders,PostService, PostRepository, ...likesProviders,LikesRepository],
   exports: []
 })
