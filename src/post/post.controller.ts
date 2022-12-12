@@ -29,36 +29,62 @@ export class PostController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllPosts(@Query() queryParams: getPostQueryParams, @Req() user: UserViewResponse) {
-    return this.postQueryRepository.getPosts(user, queryParams);
+    try {
+      return this.postQueryRepository.getPosts(user, queryParams);
+    } catch (error) {
+      console.log(error);
+      return ("Error");
+    }
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async getPost(@Param("id") id: ObjectId, @Req() user: UserViewResponse) {
-    return this.postQueryRepository.getPost(id, user);
+    try {
+      return this.postQueryRepository.getPost(id, user);
+    } catch (error) {
+      console.log(error);
+      return ("Error");
+    }
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createPost(@Body() createPostDto: postDto) {
-    return this.postService.createNewPost(createPostDto.title, createPostDto.shortDescription, createPostDto.content, createPostDto.blogId);
+    try {
+
+      return this.postService.createNewPost(createPostDto.title, createPostDto.shortDescription, createPostDto.content, createPostDto.blogId);
+    } catch (error) {
+      console.log(error);
+      return ("Error");
+    }
   }
 
   @Put(":id")
   @HttpCode(HttpStatus.OK)
   async updatePostById(
     @Param("id") id: ObjectId, @Body() updatePostDto: postDto) {
-    const updateResult = await this.postService.updatePost(id, updatePostDto);
-    if (!updateResult) throw new NotFoundException("post does not exist!");
-    return updateResult;
+    try {
+      const updateResult = await this.postService.updatePost(id, updatePostDto);
+      if (!updateResult) throw new NotFoundException("post does not exist!");
+      return updateResult;
+    } catch (error) {
+      console.log(error);
+      return ("Error");
+    }
   }
 
   @Delete("id")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostById(@Param("id") id: ObjectId) {
-    const deleteResult = await this.postService.deletePost(id);
-    if (!deleteResult) throw new NotFoundException("Post does not exist");
-    return;
+    try {
+      const deleteResult = await this.postService.deletePost(id);
+      if (!deleteResult) throw new NotFoundException("Post does not exist");
+      return;
+    } catch (error) {
+      console.log(error);
+      return ("Error");
+    }
   }
 }
 
