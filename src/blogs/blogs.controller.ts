@@ -9,8 +9,10 @@ import {
   Param,
   Post,
   Put,
-  Query, Req
+  Query, Req, Res,
+  HttpException
 } from "@nestjs/common";
+import { Response } from "express";
 import { BlogsQueryRepository } from "./blogs.query-repository";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
 import { blogDto } from "./dto/blogDto";
@@ -80,9 +82,20 @@ export class BlogsController {
   @Post(":id/posts")
   @HttpCode(HttpStatus.CREATED)
   async createPostForBlog(@Param("id") id: ObjectId,
-                          @Body() queryParams: postForBlogDto) {
+                          @Body() queryParams: postForBlogDto,
+                          @Res() res: Response) {
     try {
-      return await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
+      const newPostForBlogId = await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
+      // if (!newPostForBlogId) throw new HttpException("blogId", HttpStatus.NO_CONTENT);
+      if (newPostForBlogId) return res.sendStatus(204).send(newPostForBlogId);
+      const errors = [];
+      errors.push({ message: "Error blogId", field: "blogId" });
+      if (errors.length) {
+        res.status(404).json({
+          errorsMessages: errors
+        });
+        return;
+      }
     } catch (error) {
       console.log(error);
       return ("Error");

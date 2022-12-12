@@ -16,7 +16,7 @@ export class PostService {
     if (!blogger) return null;
     const newPost: CreatePostDto = {
       title,
-      bloggerName: blogger.name,
+      blogName: blogger.name,
       shortDescription,
       content,
       blogId,
@@ -32,7 +32,7 @@ export class PostService {
     if (createdPost) return {
       id: createdPost._id,
       title: createdPost.title,
-      bloggerName: createdPost.bloggerName,
+      blogName: createdPost.blogName,
       shortDescription: createdPost.shortDescription,
       content: createdPost.content,
       blogId: createdPost.blogId,

@@ -7,7 +7,7 @@ export type PostsType = {
   shortDescription: string;
   content: string;
   blogId: ObjectId;
-  bloggerName: string;
+  blogName: string;
   createdAt: Date;
   extendedLikesInfo: ExtendedLikesInfo;
 };
@@ -26,7 +26,7 @@ export type PostViewType = {
   shortDescription: string;
   content: string;
   blogId: ObjectId;
-  bloggerName: string;
+  blogName: string;
   createdAt: Date;
   extendedLikesInfo: ExtendedLikesInfo;
 };
@@ -36,7 +36,7 @@ export type CreatePostDto = {
   shortDescription: string;
   content: string;
   blogId:ObjectId;
-  bloggerName: string;
+  blogName: string;
   createdAt: Date;
   extendedLikesInfo: ExtendedLikesInfo;
 };

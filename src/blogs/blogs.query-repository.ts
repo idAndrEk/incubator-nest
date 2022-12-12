@@ -92,7 +92,7 @@ export class BlogsQueryRepository {
         shortDescription: post.shortDescription,
         content: post.content,
         blogId: post.blogId,
-        bloggerName: post.bloggerName,
+        blogName: post.blogName,
         createdAt: post.createdAt,
         extendedLikesInfo: {
           likesCount: likes,
