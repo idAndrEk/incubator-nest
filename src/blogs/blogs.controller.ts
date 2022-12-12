@@ -69,10 +69,19 @@ export class BlogsController {
   @HttpCode(HttpStatus.OK)
   async getPostForBlog(@Param(":id") id: ObjectId,
                        @Query() queryParams: getPostForBlogerIdQueryParams,
-                       @Req() user: UserViewResponse) {
+                       @Req() user: UserViewResponse,
+                       @Res() res: Response) {
     try {
       const blogById = await this.blogsQueryRepository.getBlog(id);
       if (blogById) return await this.blogsQueryRepository.getPostByBlogId(id, queryParams, user);
+      const errors = [];
+      errors.push({ message: "Error blogId", field: "blogId" });
+      if (errors.length) {
+        res.status(404).json({
+          errorsMessages: errors
+        });
+        return;
+      }
     } catch (error) {
       console.log(error);
       return ("Error");
