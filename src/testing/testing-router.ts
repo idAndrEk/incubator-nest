@@ -12,9 +12,10 @@ export class TestingController {
 
   @Delete("/all-data")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async() {
-    this.blogModel.deleteMany({});
-    this.postModel.deleteMany({});
+  async deleteAll() {
+    console.log('TEST');
+    await this.blogModel.deleteMany({});
+    await this.postModel.deleteMany({});
     return;
   }
 }
