@@ -35,19 +35,19 @@ export class BlogsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllBlogs(@Query() queryParams: getBlogsQueryParams) {
-    return await this.blogsQueryRepository.getBlogs(queryParams);
+    return this.blogsQueryRepository.getBlogs(queryParams);
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
-  async getBlog(@Param("id") id: ObjectId) {
-    const findBlog = await this.blogsQueryRepository.getBlog(id);
+  async getBlogById(@Param("id") id: ObjectId) {
+    return await this.blogsQueryRepository.getBlog(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createBlog(@Body() createBlogDto: blogDto) {
-    const newBlog = await this.blogsService.createNewBlog(createBlogDto);
+    return this.blogsService.createNewBlog(createBlogDto);
   }
 
   @Get(":id/posts")
@@ -76,12 +76,10 @@ export class BlogsController {
     @Body() updateBlogDto: blogDto
   ) {
     const updateResult = await this.blogsService.updateBlog(id, updateBlogDto);
-    if (updateResult) return updateResult;
-    throw new NotFoundException("Blog not found");
-    //  throw new NotFoundException([{
-    //   message: "Blog does not exist!",
-    //   field: "blogId"
-    // }]);
+    if (!updateResult) {
+      throw new NotFoundException("Blog not found");
+    }
+    return;
   }
 
   @Delete(":id")
@@ -89,7 +87,9 @@ export class BlogsController {
   async deleteBlogById(@Param("id") id: ObjectId) {
 
     const deleteResult = await this.blogsService.deleteBlog(id);
-    if (deleteResult) return deleteResult;
-    throw new NotFoundException("Blog does not exist");
+    if (deleteResult) {
+      throw new NotFoundException("Blog does not exist");
+    }
+    return;
   }
 }
