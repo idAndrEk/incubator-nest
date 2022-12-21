@@ -9,10 +9,10 @@ import {
   Param,
   Post,
   Put,
-  Query, Req, Res,
+  Query, Req,
+  BadRequestException,
   HttpException
 } from "@nestjs/common";
-import { Response } from "express";
 import { BlogsQueryRepository } from "./blogs.query-repository";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
 import { blogDto } from "./dto/blogDto";
@@ -35,80 +35,38 @@ export class BlogsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllBlogs(@Query() queryParams: getBlogsQueryParams) {
-    try {
-      return await this.blogsQueryRepository.getBlogs(queryParams);
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+    return await this.blogsQueryRepository.getBlogs(queryParams);
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async getBlog(@Param("id") id: ObjectId) {
-    try {
-      return await this.blogsQueryRepository.getBlog(id);
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+    const findBlog = await this.blogsQueryRepository.getBlog(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createBlog(@Body() createBlogDto: blogDto) {
-    try {
-      return await this.blogsService.createNewBlog(createBlogDto);
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+    const newBlog = await this.blogsService.createNewBlog(createBlogDto);
   }
 
   @Get(":id/posts")
   @HttpCode(HttpStatus.OK)
   async getPostForBlog(@Param(":id") id: ObjectId,
                        @Query() queryParams: getPostForBlogerIdQueryParams,
-                       @Req() user: UserViewResponse,
-                       @Res() res: Response) {
-    try {
-      const blogById = await this.blogsQueryRepository.getBlog(id);
-      if (blogById) return await this.blogsQueryRepository.getPostByBlogId(id, queryParams, user);
-      const errors = [];
-      errors.push({ message: "Error blogId", field: "blogId" });
-      if (errors.length) {
-        res.status(404).json({
-          errorsMessages: errors
-        });
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+                       @Req() user: UserViewResponse) {
+    const blogById = await this.blogsQueryRepository.getBlog(id);
+    if (blogById) return await this.blogsQueryRepository.getPostByBlogId(id, queryParams, user);
+    throw new NotFoundException("Blog not found");
   }
 
   @Post(":id/posts")
   @HttpCode(HttpStatus.CREATED)
   async createPostForBlog(@Param("id") id: ObjectId,
-                          @Body() queryParams: postForBlogDto,
-                          @Res() res: Response) {
-    try {
-      const newPostForBlogId = await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
-      // if (!newPostForBlogId) throw new HttpException("blogId", HttpStatus.NO_CONTENT);
-      if (newPostForBlogId) return res.sendStatus(204).send(newPostForBlogId);
-      const errors = [];
-      errors.push({ message: "Error blogId", field: "blogId" });
-      if (errors.length) {
-        res.status(404).json({
-          errorsMessages: errors
-        });
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+                          @Body() queryParams: postForBlogDto) {
+    const newPostForBlogId = await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
+    if (newPostForBlogId) return newPostForBlogId;
+    throw new NotFoundException("Blog not found");
   }
 
   @Put(":id")
@@ -117,26 +75,21 @@ export class BlogsController {
     @Param("id") id: ObjectId,
     @Body() updateBlogDto: blogDto
   ) {
-    try {
-      const updateResult = await this.blogsService.updateBlog(id, updateBlogDto);
-      if (!updateBlogDto) throw new NotFoundException("Blog does not exist!");
-      return updateResult;
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+    const updateResult = await this.blogsService.updateBlog(id, updateBlogDto);
+    if (updateResult) return updateResult;
+    throw new NotFoundException("Blog not found");
+    //  throw new NotFoundException([{
+    //   message: "Blog does not exist!",
+    //   field: "blogId"
+    // }]);
   }
 
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBlogById(@Param("id") id: ObjectId) {
-    try {
-      const deleteResult = await this.blogsService.deleteBlog(id);
-      if (!deleteResult) throw new NotFoundException("Blog does not exist");
-      return;
-    } catch (error) {
-      console.log(error);
-      return ("Error");
-    }
+
+    const deleteResult = await this.blogsService.deleteBlog(id);
+    if (deleteResult) return deleteResult;
+    throw new NotFoundException("Blog does not exist");
   }
 }

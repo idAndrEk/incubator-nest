@@ -5,7 +5,6 @@ import {
   Get, HttpCode, HttpStatus, NotFoundException,
   Param,
   Post,
-  Put,
   Query
 } from "@nestjs/common";
 import { UsersService } from "./users.service";

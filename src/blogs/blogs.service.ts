@@ -3,6 +3,7 @@ import { BlogsViewType, CreateBlogs } from './types/blogsType';
 import { BlogsRepository } from './blogs.repository';
 import { blogDto } from './dto/blogDto';
 import { ObjectId } from 'mongodb';
+import { validateOrReject } from "class-validator";
 
 @Injectable()
 export class BlogsService {
@@ -13,6 +14,7 @@ export class BlogsService {
     description,
     websiteUrl,
   }: blogDto): Promise<BlogsViewType | null> {
+    // await validateOrReject(blogDto)
     const newBlogger: CreateBlogs = {
       name: name,
       description: description,
