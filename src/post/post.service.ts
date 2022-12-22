@@ -11,7 +11,8 @@ export class PostService {
               private readonly blogsQueryRepository: BlogsQueryRepository) {
   }
 
-  async createNewPost(blogId: ObjectId, title: string, shortDescription: string, content: string): Promise<PostViewType | null> {
+  async createNewPost(title: string, content: string, blogId: ObjectId, shortDescription: string): Promise<PostViewType | null> {
+    console.log(blogId);
     const blogger = await this.blogsQueryRepository.getBlog(blogId);
     if (!blogger) return null;
     const newPost: CreatePostDto = {

@@ -9,9 +9,7 @@ import {
   Param,
   Post,
   Put,
-  Query, Req,
-  BadRequestException,
-  HttpException
+  Query, Req
 } from "@nestjs/common";
 import { BlogsQueryRepository } from "./blogs.query-repository";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
@@ -41,7 +39,7 @@ export class BlogsController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async getBlogById(@Param("id") id: ObjectId) {
-    return await this.blogsQueryRepository.getBlog(id);
+    return this.blogsQueryRepository.getBlog(id);
   }
 
   @Post()
@@ -64,7 +62,7 @@ export class BlogsController {
   @HttpCode(HttpStatus.CREATED)
   async createPostForBlog(@Param("id") id: ObjectId,
                           @Body() queryParams: postForBlogDto) {
-    const newPostForBlogId = await this.postsService.createNewPost(id, queryParams.title, queryParams.shortDescription, queryParams.content);
+    const newPostForBlogId = await this.postsService.createNewPost(queryParams.title, queryParams.content, id, queryParams.shortDescription);
     if (newPostForBlogId) return newPostForBlogId;
     throw new NotFoundException("Blog not found");
   }
