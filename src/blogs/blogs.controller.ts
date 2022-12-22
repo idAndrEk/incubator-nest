@@ -50,10 +50,11 @@ export class BlogsController {
 
   @Get(":id/posts")
   @HttpCode(HttpStatus.OK)
-  async getPostForBlog(@Param(":id") id: ObjectId,
+  async getPostForBlog(@Param("id") id: ObjectId,
                        @Query() queryParams: getPostForBlogerIdQueryParams,
                        @Req() user: UserViewResponse) {
     const blogById = await this.blogsQueryRepository.getBlog(id);
+    console.log(blogById);
     if (blogById) return await this.blogsQueryRepository.getPostByBlogId(id, queryParams, user);
     throw new NotFoundException("Blog not found");
   }
