@@ -8,6 +8,7 @@ import { LikesRepository } from "../like/likesRepository";
 import { Model } from "mongoose";
 import { getCountPage, getSkipPage } from "../utilities/getPage";
 
+
 @Injectable()
 export class PostsQueryRepository {
   constructor(@Inject("POST_MODEL") private readonly postModel: Model<PostsType>,

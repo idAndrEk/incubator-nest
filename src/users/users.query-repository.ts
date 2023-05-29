@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import { Model } from "mongoose";
 import { getCountPage, getSkipPage } from "../utilities/getPage";
 
+
 @Injectable()
 export class UsersQueryRepository {
   constructor(@Inject("USER_MODEL") private readonly userModel: Model<UserAccType>) {
