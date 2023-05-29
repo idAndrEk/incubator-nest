@@ -4,9 +4,7 @@ import {
   IsInt,
   Min,
   IsString,
-  IsEnum,
 } from 'class-validator';
-import { SortDirection } from '../../enums';
 
 export class getBlogsQueryParams {
   @IsOptional()

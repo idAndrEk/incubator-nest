@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { getCountPage, getSkipPage } from "../ utilities/getPage";
 import { SortDirection } from "../enums";
 import { getUsersQueryParams } from "./dto/getUsersQueryParams";
 import { PaginationUserType, UserAccType, UserResponse } from "./types/usersType";
 import { ObjectId } from "mongodb";
 import { Model } from "mongoose";
+import { getCountPage, getSkipPage } from "../utilities/getPage";
 
 @Injectable()
 export class UsersQueryRepository {

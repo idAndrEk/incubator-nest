@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
-require('dotenv').config()
+
+require("dotenv").config();
 import { AppController } from "./app.controller";
 import { BlogsModule } from "./blogs/blogs.module";
 import { PostModule } from "./post/post.module";
@@ -7,12 +8,12 @@ import { UsersModule } from "./users/users.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { LikesModule } from "./like/likes.module";
-// import { CommentModule } from "./comment/comment.module";
-
+import { MongooseModule } from "@nestjs/mongoose";
+import * as process from "process";
 
 
 @Module({
-  imports: [
+  imports: [MongooseModule.forRoot(process.env.MongoURI),
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
@@ -37,7 +38,7 @@ import { LikesModule } from "./like/likes.module";
     BlogsModule,
     PostModule,
     UsersModule,
-    LikesModule,
+    LikesModule
     // CommentModule,
   ],
   controllers: [AppController]

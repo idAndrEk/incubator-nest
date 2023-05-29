@@ -2,13 +2,13 @@ import { Inject, Injectable } from "@nestjs/common";
 import { BlogsType, BlogsViewType, PaginationBlogsType } from "./types/blogsType";
 import { SortDirection } from "../enums";
 import { getBlogsQueryParams } from "./dto/getBlogsQueryParams";
-import { getCountPage, getSkipPage } from "../ utilities/getPage";
 import { PaginationPostType, PostsType, PostViewType } from "../post/types/postsType";
 import { UserViewResponse } from "../users/types/usersType";
 import { getPostForBlogerIdQueryParams } from "./dto/getPostForBlogIdqueryParams";
 import { LikesRepository } from "../like/likesRepository";
 import { ObjectId } from "mongodb";
 import { Model } from "mongoose";
+import { getCountPage, getSkipPage } from "../utilities/getPage";
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -18,12 +18,12 @@ export class BlogsQueryRepository {
   }
 
   async getBlogs({
-                 pageNumber = 1,
-                 pageSize = 10,
-                 searchNameTerm = null,
-                 sortDirection = SortDirection.desc,
-                 sortBy = "createdAt"
-               }: getBlogsQueryParams): Promise<PaginationBlogsType> {
+                   pageNumber = 1,
+                   pageSize = 10,
+                   searchNameTerm = null,
+                   sortDirection = SortDirection.desc,
+                   sortBy = "createdAt"
+                 }: getBlogsQueryParams): Promise<PaginationBlogsType> {
     const findBlogs = await this.blogModel.find({
       $or: [{ name: { $regex: searchNameTerm ?? "", $options: "i" } }]
     })
@@ -61,7 +61,7 @@ export class BlogsQueryRepository {
     };
   }
 
-  async getPostByBlogId(id, {
+  async getPostByBlogId(blogId, {
     pageNumber = 1,
     pageSize = 10,
     sortDirection = SortDirection.desc,
@@ -69,14 +69,18 @@ export class BlogsQueryRepository {
   }: getPostForBlogerIdQueryParams, user: UserViewResponse): Promise<PaginationPostType> {
     const postData = await this.postModel
       .find({
-        $or: [{ blogId: { $regex: id ?? "" } }]
+        $or: [{ blogId: { $regex: blogId ?? "" } }]
+        // "blogId":{$in: "blogId"}
+        //  blogId: { $regex: { blogId } }
       })
+      // .select(blogId)
       .skip(getSkipPage(pageNumber, pageSize))
       .sort({ [sortBy]: sortDirection === SortDirection.asc ? 1 : -1 })
       .limit(pageSize)
       .lean();
+    console.log(postData);
     const totalCount = await this.postModel.countDocuments({
-      $or: [{ blogId: { $regex: id ?? "" } }]
+      $or: [{ blogId: { $regex: blogId ?? "" } }]
     });
     let items: PostViewType[] = [];
     for (const post of postData) {

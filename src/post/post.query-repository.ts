@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { getCountPage, getSkipPage } from "../ utilities/getPage";
 import { PaginationPostType, PostsType, PostViewType } from "./types/postsType";
 import { SortDirection } from "../enums";
 import { UserViewResponse } from "../users/types/usersType";
@@ -7,6 +6,7 @@ import { getPostQueryParams } from "./dto/getPostQueryParams";
 import { ObjectId } from "mongodb";
 import { LikesRepository } from "../like/likesRepository";
 import { Model } from "mongoose";
+import { getCountPage, getSkipPage } from "../utilities/getPage";
 
 @Injectable()
 export class PostsQueryRepository {

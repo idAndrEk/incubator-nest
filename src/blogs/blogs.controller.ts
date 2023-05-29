@@ -54,7 +54,6 @@ export class BlogsController {
                        @Query() queryParams: getPostForBlogerIdQueryParams,
                        @Req() user: UserViewResponse) {
     const blogById = await this.blogsQueryRepository.getBlog(id);
-    console.log(blogById);
     if (blogById) return await this.blogsQueryRepository.getPostByBlogId(id, queryParams, user);
     throw new NotFoundException("Blog not found");
   }
@@ -84,9 +83,8 @@ export class BlogsController {
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBlogById(@Param("id") id: ObjectId) {
-
     const deleteResult = await this.blogsService.deleteBlog(id);
-    if (deleteResult) {
+    if (!deleteResult) {
       throw new NotFoundException("Blog does not exist");
     }
     return;
